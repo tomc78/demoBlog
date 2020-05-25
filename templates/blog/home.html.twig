@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<h1>{{ title }}</h1>
+{# TWIG est un language de rendu #}
+{# {{}} --> double accollades, ce que l'on appel une interpolation #}
+{#  #}
+
+{% if age > 18 %}
+
+    <p> tu es majeur Félicitation !! </p>
+
+{% else %}
+
+    <p> Tu es mineur ptit con </p>
+
+{% endif %}
+
+{% endblock %}
