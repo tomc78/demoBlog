@@ -9,34 +9,24 @@
     <h1 class="display-4 text-center my4">Liste des articles</h1>
 
     <div class="row d-flex justify-content-center">
+    {# Cette boucle for est une boucle TWIG , la variable newArticle est déclaré ici c'st une variable de recepetion#}
+    {# la variable 'articles' provient de la méthode index() du controller 'BlogController', 
+    elle contient tout les articles slectionnée en BDD #}
 
-            <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-                <img src="https://picsum.photos/200" alt=""><hr>
-                <h2>Heading</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-secondary" href="{{path('blog_show')}}" role="button">View details &raquo;</a></p>
-            </div>
-                
-            <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-                <img src="https://picsum.photos/200" alt=""><hr>
-                <h2>Heading</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-secondary" href="{{path('blog_show')}}" role="button">View details &raquo;</a></p>
-            </div>
-            
-               
-            <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-                <img src="https://picsum.photos/200" alt=""><hr>
-                <h2>Heading</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-secondary" href="{{path('blog_show')}}" role="button">View details &raquo;</a></p>
-            </div>
-                
-            <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-                <img src="https://picsum.photos/200" alt=""><hr>
-                <h2>Heading</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-secondary" href="{{path('blog_show')}}" role="button">View details &raquo;</a></p>
-            </div>
+            {% for newArticles in articles %}
+
+                <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
+                    <img src="https://picsum.photos/200" alt=""><hr>
+                    <h2>{{ newArticles.title }}</h2>
+                    <p>{{ newArticles.content|raw }}</p><hr> 
+                    {# raw= filtre pour enlever les balises presentent en BDD <p>#}
+                   
+                    <p>Posté le {{ newArticles.createdAt|date('d/m/Y')}} à {{ newArticles.createdAt|date('H:i:s')}}</p>
+                    <p><a class="btn btn-secondary" href="{{path('blog_show', {'id': newArticles.id})}}" role="button">View details &raquo;</a></p>
+                    
+                </div>
+
+            {% endfor %}
+    
     </div>
 {% endblock %}

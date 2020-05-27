@@ -15,7 +15,7 @@ class ArticleFixtures extends Fixture
         {
             $article = new Article;
             $article->setTitle("Titre de l'article n° $i")
-                    ->setContent("<p>Contenur de l'article n° $i</p>")
+                    ->setContent("<p>Contenu de l'article n° $i</p>")
                     ->setImage("https://picsum.photos/200")
                     ->setCreatedAt(new DateTime());
 
