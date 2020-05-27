@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\ArticleRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
 {
@@ -15,7 +17,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog", name="blog")
      */
-    public function index()
+    public function index(Article $article)
     {   
         /*
             Pour selectionner des données en BDD, nous avons besoin de la classe Repository de la classe Article
@@ -28,9 +30,9 @@ class BlogController extends AbstractController
             dump() : équivalent de var_dump(), permet d'observer le resultat de la requete de selection en bas de la page dans la barre administrative (cible à droite)
         */
 
-        $repo = $this->getDoctrine()->getRepository(Article::class);
+        //$repo = $this->getDoctrine()->getRepository(Article::class);
 
-        $articles = $repo->findAll();
+        //$articles = $repo->find($id);
         // findAll() est une méthode issue de la classe ArticleRepository qui permet de selectionner l'ensemble de la table (similaire à SELECT * FROM article)
 
         
@@ -39,6 +41,8 @@ class BlogController extends AbstractController
 
         return $this->render('blog/index.html.twig', [
             'controller_name' => 'BlogController',
+            'articles'=> $articles
+
         ]);
     }
 
@@ -53,22 +57,47 @@ class BlogController extends AbstractController
             
         ]);
     }
-
-    /**
-     * @Route("/blog/45", name="blog_show")
+        /**
+     * @Route("/blog/new", name="blog_create")
      */
-    public function show()
+    public function create(Request $request)
     {
-        return $this->render('blog/show.html.twig');
-    }
-
-    /**
-     * @Route("/blog/46", name="blog_create")
-     */
-    public function create()
-    {
+        dump($request);
+        
         return $this->render('blog/create.html.twig');
     }
-}
 
+    /**
+     * @Route("/blog/{id}", name="blog_show")
+     */
+    public function show($id)
+    {
+
+        /**
+         * on appelle doctrine cra c'est lui qui fais la navette pour nous jusqu'a la bdd pour porter 
+         * nos requete SQL, ensuite on prend une méthode issue de doctrine qui est getRepository qui va 
+         * faire une requete de selection (qui sera acheminer par doctrine) dans la class ARTICLES du fichier
+         * articleRepository ( rappel article Repositiry a été créer automatiquement a la création de l'unité "article)
+         */
+        $repo = $this->getDoctrine()->getRepository(Article::class);
+
+        $article = $repo->find($id);
+
+        dump($article);
+
+        return $this->render('blog/show.html.twig',[
+            'article' => $article
+        ]);
+    }
+
+
+}
+/* Injections de dépendances
+
+Dans symfony nous avons un service container , tout ce qui est dans Symfony est géré par Symfony
+Si nous observons la class BlogController nous ne l'avons jamais instancier , c'est Symfony qui l'a fait pour nous
+donc il nstancie les classe et appelle les fonctions
+
+Dans Symfony c'es objets utiles sont appellés 'services et chaque service vit a l'intérieur d'un objet très spécial appelé conteneur de service
+il vous facilite l avie favorise une architecture solide et super rapide
 
