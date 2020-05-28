@@ -10,7 +10,9 @@
             <div class="col-md-12 border border-secondary rounded mr-1 mb-5 text-center">
                 <img src="https://picsum.photos/800/300" alt=""><hr>
                 <h2>{{ article.title }}</h2>
-                <p>{{ article.content|raw }}</p>
+                <p>{{ article.content|raw }}</p><hr>
+                <p class="text-right">Posté le {{ article.createdAt|date('d/m/Y')}} à {{ article.createdAt|date('H:i:s')}}</p>
+                
 
                 
                  

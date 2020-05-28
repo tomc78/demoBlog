@@ -16,12 +16,16 @@
             {% for newArticles in articles %}
 
                 <div class="col-md-3 border border-secondary rounded mr-1 mb-1 text-center">
-                    <img src="https://picsum.photos/200" alt=""><hr>
+
+                    <img src="{{ newArticles.image}}" alt="{{ newArticles.title}}"><hr>
+
                     <h2>{{ newArticles.title }}</h2>
+
                     <p>{{ newArticles.content|raw }}</p><hr> 
                     {# raw= filtre pour enlever les balises presentent en BDD <p>#}
                    
                     <p>Posté le {{ newArticles.createdAt|date('d/m/Y')}} à {{ newArticles.createdAt|date('H:i:s')}}</p>
+
                     <p><a class="btn btn-secondary" href="{{path('blog_show', {'id': newArticles.id})}}" role="button">View details &raquo;</a></p>
                     
                 </div>

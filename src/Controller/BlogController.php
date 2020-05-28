@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
@@ -17,7 +20,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog", name="blog")
      */
-    public function index(Article $article)
+    public function index(ArticleRepository $repo)
     {   
         /*
             Pour selectionner des données en BDD, nous avons besoin de la classe Repository de la classe Article
@@ -35,7 +38,8 @@ class BlogController extends AbstractController
         //$articles = $repo->find($id);
         // findAll() est une méthode issue de la classe ArticleRepository qui permet de selectionner l'ensemble de la table (similaire à SELECT * FROM article)
 
-        
+    
+        $articles =$repo->findAll();
 
         dump($articles);
 
@@ -59,18 +63,81 @@ class BlogController extends AbstractController
     }
         /**
      * @Route("/blog/new", name="blog_create")
+     * @Route("/blog/{id}/edit", name="blog_edit")
      */
-    public function create(Request $request)
+    public function form(Article $article = null, Request $request, EntityManagerInterface $manager)
     {
         dump($request);
+
         
-        return $this->render('blog/create.html.twig');
+        //l'objet $request issue de la class Request stock les données récupéré par les super globales
+        //$_POST, $_GET etc..
+        //Pour insérer un nouvelle article, nous devons instancier la classe pour avoir un article vide,
+        // toutes les propriétés private ($title,$content, $image), ils faut donc les remplir, pour cela nous
+        // faison appel au setteur 
+        
+        // EntityMangerInterface est une méthode prédéfinie qui permet de manipuler les lignes de a BDD
+        //(INSERT,UPDATE,DELETE)
+
+        //redirectedToRoute() est une méthode prédéfinie qui permet de rediriger vers une route spécifique
+        //dans notre cas on redirige vers la route blog_show afn d''afficher les détails de l'article qui viens d'être insérée
+        // if($request->request->count() >0)
+        // {
+        //     $article = new Article;
+        //     $article->setTitle($request->request->get('title'))
+        //             ->setContent($request->request->get('content'))
+        //             ->setImage($request->request->get('image'))
+        //             ->setCreatedAt(new \DateTime());
+
+        //     $manager->persist($article);
+        //     $manager->flush();
+
+        //     return $this->redirectToRoute('blog_show',[
+        //         'id' => $article->getId()
+        //     ]);
+        // }
+        // handleRequest() est une méthode qui permet de récupérer les informations stockées dans 
+        //$_POST et de les envoyé directement dans le formulaire 
+        if(!$article)
+        {
+            $article = new Article;
+        }
+        
+
+        $form = $this->createFormBuilder($article)
+                     ->add('title')
+                     ->add('content')
+                     ->add('image')
+                     ->getForm();
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            if(!$article->getId())
+            {
+                $article->setCreatedAt(new \DateTime());
+            }
+            
+
+            $manager->persist($article);
+            $manager->flush();
+
+            return $this->redirectToRoute('blog_show',[
+                     'id' => $article->getId()
+                 ]);
+        }
+        
+        
+        return $this->render('blog/create.html.twig', [
+            'formArticle' => $form->createView()
+        ]);
     }
 
     /**
      * @Route("/blog/{id}", name="blog_show")
      */
-    public function show($id)
+    public function show(Article $article)
     {
 
         /**
@@ -79,9 +146,9 @@ class BlogController extends AbstractController
          * faire une requete de selection (qui sera acheminer par doctrine) dans la class ARTICLES du fichier
          * articleRepository ( rappel article Repositiry a été créer automatiquement a la création de l'unité "article)
          */
-        $repo = $this->getDoctrine()->getRepository(Article::class);
+        //$repo = $this->getDoctrine()->getRepository(Article::class);
 
-        $article = $repo->find($id);
+        //$article = $repo->find($id);
 
         dump($article);
 
