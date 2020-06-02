@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,11 +105,13 @@ class BlogController extends AbstractController
         }
         
 
-        $form = $this->createFormBuilder($article)
-                     ->add('title')
-                     ->add('content')
-                     ->add('image')
-                     ->getForm();
+        // $form = $this->createFormBuilder($article)
+        //              ->add('title')
+        //              ->add('content')
+        //              ->add('image')
+        //              ->getForm();
+
+        $form = $this->createForm(ArticleType::class, $article);
 
         $form->handleRequest($request);
 
@@ -130,7 +133,10 @@ class BlogController extends AbstractController
         
         
         return $this->render('blog/create.html.twig', [
-            'formArticle' => $form->createView()
+            'formArticle' => $form->createView(), 
+            'editMode' => $article->getId() !== null
+            // on test si l'article contient un ID ou non , si il en a déja un ce n'est pas un nouvelle article
+            //mais une modification
         ]);
     }
 
