@@ -173,4 +173,5 @@ donc il nstancie les classe et appelle les fonctions
 
 Dans Symfony c'es objets utiles sont appellés 'services et chaque service vit a l'intérieur d'un objet très spécial appelé conteneur de service
 il vous facilite l avie favorise une architecture solide et super rapide
+*/
 
