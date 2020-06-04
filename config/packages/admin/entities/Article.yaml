@@ -1,0 +1,22 @@
+easy_admin:
+  entities:
+    Article:
+      class: App\Entity\Article
+      form: 
+        fields:
+          - {property: 'title'}
+          - {property: 'content'}
+          - {property: 'image'}
+          - {property: 'category'}
+          - {property: 'createdAt'}
+      list:
+        fields:
+          - {property: 'title', label: 'Titre'}
+          - {property: 'content', label: 'Contenu'}
+          - {property: 'image', type: 'image'}
+          - {property: 'category', label: 'Catégory'}
+          - {property: 'createdAt', label: 'Date de création'}
+
+        actions:
+          - {name: 'edit', icon: 'pencil', label: false, css_class: 'btn btn-primary mb-1'}
+          - {name: 'delete', icon: 'trash', label: false, css_class: 'btn btn-danger'}
